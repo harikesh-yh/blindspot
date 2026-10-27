@@ -1,12 +1,12 @@
-FROM python:3.11-slim
+FROM node:18-alpine
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir poetry || pip install --no-cache-dir pip install poetry
+COPY frontend/package*.json ./
+RUN npm install
 
-COPY backend/pyproject.toml .
-RUN pip install -e .
+COPY frontend/ .
 
-COPY backend/ .
+EXPOSE 3000
 
-CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
